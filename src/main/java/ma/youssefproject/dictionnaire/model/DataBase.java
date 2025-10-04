@@ -1,5 +1,6 @@
 package ma.youssefproject.dictionnaire.model;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -7,10 +8,18 @@ import java.sql.Statement;
 
 public class DataBase {
 
-    public static final String emplacementDB = "jdbc:sqlite:dictionnaire.db" ;
+    public static final String emplacementDB = "jdbc:sqlite:../database/dictionnaire.db" ;
     private static Connection connexion = null ;
 
     public static Connection getConnexion () {
+
+        File f = new File("../database") ;
+
+        if ( !f.exists() ) {
+
+            if ( ! f.mkdirs() )
+                return null ;
+        }
 
         if ( connexion == null ) {
 
