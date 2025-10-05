@@ -10,13 +10,11 @@ public class DictionnaireController {
 
     private static MotDAO dao = new MotDAO() ;
 
-    public static List<Mot> rechercherDef (String motchercher ) {
+    public static Mot rechercherDef (String motchercher ) {
 
         Mot mot = new Mot (-1,motchercher,null,null) ;
 
-
-          List<Mot> listMot ;
-       return listMot =  dao.getDef(mot) ;
+       return dao.getDef(mot) ;
 
     }
 

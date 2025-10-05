@@ -46,9 +46,9 @@ public class MotDAO implements DAO {
     }
 
     @Override
-    public List<Mot> getDef(Mot mot) {
+    public Mot getDef (Mot mot) {
 
-        List<Mot> mots = new ArrayList<>() ;
+        Mot def = null ;
 
         String sql = "SELECT id, mot, def, categorie " +
                 "FROM mots " +
@@ -60,22 +60,18 @@ public class MotDAO implements DAO {
             ResultSet rs = stmt.executeQuery() ;
 
 
-            while ( rs.next() ) {
-                Mot m = new Mot(
+            if ( rs.next() ) {
+                def = new Mot(
                         rs.getInt("id"),        // id
                         rs.getString("mot"),    // mot
                         rs.getString("def"),    // définition
                         rs.getString("categorie") // catégorie
                 );
-
-                  mots.add(m) ;
-
             }
-       ;
         } catch (SQLException e ) {
             System.err.println("Probleme : "+e.getMessage()) ;
         }
-        return mots ;
+        return def ;
     }
 
     @Override

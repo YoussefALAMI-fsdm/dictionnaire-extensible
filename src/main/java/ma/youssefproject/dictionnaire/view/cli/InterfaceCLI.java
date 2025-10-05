@@ -1,0 +1,56 @@
+package ma.youssefproject.dictionnaire.view.cli;
+
+import ma.youssefproject.dictionnaire.controller.DictionnaireController;
+import ma.youssefproject.dictionnaire.model.Mot;
+
+import java.util.List;
+import java.util.Scanner;
+
+public class InterfaceCLI {
+
+    private static Scanner sc = new Scanner(System.in);
+
+    public void ajoutDef ( String mot ) {
+
+        System.out.println("Veuillez donnée la definition du mot : "+mot);
+        String def = sc.nextLine() ;
+        System.out.println("Veuillez donnée la catégorie du mot : "+mot);
+        String cat = sc.nextLine() ;
+
+        System.out.println("\n\t\t"+DictionnaireController.ajouterDef(mot,def,cat)) ;
+    }
+
+    public void afficherDef(Mot mot) {
+
+        System.out.println("\n\n\t La defintion du mot "+mot.getMot()+" est : "+mot.getDef());
+    }
+
+        public void menuDemmarage () {
+            int choix;
+            do {
+                System.out.println("\n\n\t\t  ---------------- Bonjour dans votre dictionnaire CLI -------------------- ");
+                System.out.println("\n\n\t 1) Chercher une definition");
+                System.out.println("\n\t 2) Fermer le programme");
+                System.out.println("\n\n\t\t\t\t Taper votre choix : ");
+                choix = sc.nextInt();
+
+                if (choix == 1) {
+
+                    System.out.print("\n\n\t Donner le mot a chercher : ");
+                    String mot = sc.nextLine();
+                    Mot m = DictionnaireController.rechercherDef(mot);
+
+                    if ( m == null ) {
+                        System.out.print("\n\n\t\t Le mot n'est pas trouvé , voullez ajouter une def (yes/no) ? ");
+                        String reponse = sc.nextLine() ;
+
+                        if ( reponse.equalsIgnoreCase("yes") || reponse.equalsIgnoreCase("no"))
+                            ajoutDef(mot);
+                    }
+                    else
+                        afficherDef(m);
+                }
+
+            } while (choix != 2);
+        }
+    }
