@@ -8,14 +8,35 @@ import java.sql.Statement;
 
 public class DataBase {
 
-    public static final String emplacementDB = "jdbc:sqlite:../database/dictionnaire.db" ;
-    private static Connection connexion = null ;
+    public static final String emplacementDB = getDataUserDirectory() + File.separator + "database" ; // C:\Users\<nom>\AppData\Local\Dictionnaire-extensible/database
+    private static Connection connexion = null ; // A ne pas initialiser ici directement car si connexion a echoué lors du chargement de class il reste le long du programme ( car static )
 
-    public static Connection getConnexion () {
 
-        File f = new File("../database") ;
+    private static String getDataUserDirectory () {
 
-        if ( !f.exists() ) {
+        String home = System.getProperty("user.home") ;
+        String os = System.getProperty("os.name").toLowerCase() ;
+
+         StringBuilder appDir = new StringBuilder(home) ;
+
+        if ( os.contains("win") )  // C:\Users\<nom>\AppData\Local\Dictionnaire-extensible
+            appDir.append(File.separator).append("AppData").append(File.separator).append("Local").append("Dictionnaire-extensible") ;
+
+          else if ( os.contains("mac") ) // /Users/<nom>/Library/Application Support/Dictionnaire-extensible
+            appDir.append(File.separator).append("Library").append(File.separator).append("Application Support").append("Dictionnaire-extensible") ;
+
+            else // /home/<nom>/.local/share/Dictionnaire-extensible
+            appDir.append(File.separator).append(".local").append(File.separator).append("share").append("Dictionnaire-extensible") ;
+
+
+        return appDir.toString() ;
+    }
+
+    private static Connection getConnexion () {
+
+        File f = new File(emplacementDB) ;
+
+        if ( !f.exists() ) {   // Pour qoui le dossier frere "database" du projet
 
             if ( ! f.mkdirs() )
                 return null ;
@@ -24,7 +45,8 @@ public class DataBase {
         if ( connexion == null ) {
 
             try {
-                  connexion = DriverManager.getConnection(emplacementDB) ;
+                String url = "jdbc:sqlite:" + emplacementDB + File.separator + "dictionnaire.db";
+                  connexion = DriverManager.getConnection(url) ;
             } catch ( SQLException e ) {
                 System.err.println("Probleme de connexion avec la DB !!! : "+e.getMessage());
             }
@@ -32,20 +54,48 @@ public class DataBase {
         return connexion ;
     }
 
-    public static void creerDB () { // Appeler pour creer les tables si non ecore existant
+    private static void creerDB () { // Appeler pour creer les tables si non ecore existant
 
-        String sql = "CREATE TABLE IF NOT EXISTS mots ( " +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT , " +
+        String sql1 = "CREATE TABLE IF NOT EXISTS mots (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT ," +
                 " mot TEXT NOT NULL ," +
-                " def TEXT " +
-                ") ;" ;
+                " def TEXT" +
+                ");" ;
 
-    try ( Connection connexion = getConnexion() ; Statement stmt = connexion.createStatement() ) {
+        String sql2 = " CREATE INDEX IF NOT EXISTS idx_mot ON mots(mot) ;" ;
 
-        stmt.execute(sql) ;
+        connexion = getConnexion() ;
+
+        if ( connexion == null ) { // Verification pour eviter le NPE
+
+            System.err.println("Probleme lors su connexion au DB !! , creation annulée ! ");
+            return ;
+        }
+
+    try ( Statement stmt = connexion.createStatement() ) {
+
+        stmt.execute(sql1) ;
+        stmt.execute(sql2) ;
 
     } catch ( SQLException e ) {
         System.err.println(e.getMessage());
     }
+    }
+
+    public void init () {
+        creerDB();
+    }
+
+    public void close () {
+
+        if ( connexion != null ) {
+
+               try {
+                  connexion.close();
+                  connexion = null; // le rendre en etat propre
+               } catch (SQLException e) {
+                   System.err.println("Erreur fermeture DB : " + e.getMessage());
+               }
+            }
     }
 }
