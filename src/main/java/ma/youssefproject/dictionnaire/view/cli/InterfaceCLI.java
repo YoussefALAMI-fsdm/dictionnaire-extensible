@@ -31,7 +31,7 @@ public class InterfaceCLI {
                 System.out.println("\n\n\t\t  ---------------- Bonjour dans votre dictionnaire CLI -------------------- ");
                 System.out.println("\n\n\t 1) Chercher une definition");
                 System.out.println("\n\t 2) Fermer le programme");
-                System.out.println("\n\n\t\t\t\t Taper votre choix : ");
+                System.out.print("\n\n\t\t\t\t Taper votre choix : ");
                 choix = sc.nextInt();
 
                 if (choix == 1) {

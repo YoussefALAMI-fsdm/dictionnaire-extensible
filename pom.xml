@@ -97,7 +97,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                ma.youssefproject.dictionnaire.dictionniare/ma.youssefproject.dictionnaire.App.HelloApplication
+                                ma.youssefproject.dictionnaire.dictionniare/ma.youssefproject.dictionnaire.App.Main
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

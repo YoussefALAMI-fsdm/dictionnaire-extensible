@@ -50,7 +50,7 @@ public class MotDAO implements DAO {
 
         Mot def = null ;
 
-        String sql = "SELECT id, mot, def, categorie " +
+        String sql = "SELECT id, mot, def, categorie" +
                 "FROM mots " +
                 "WHERE mot LIKE ? COLLATE NOCASE;" ;
 
