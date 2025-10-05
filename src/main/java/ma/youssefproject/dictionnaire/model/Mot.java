@@ -9,8 +9,8 @@ public class Mot {
     private String categorie;
 
     // Constructeur public
-    public Mot(int id, String mot, String def, String categorie) {
-        this.id = id;
+    public Mot( int id , String mot, String def, String categorie) {
+       this.id = id ;
         this.mot = mot;
         this.def = def;
         this.categorie = categorie;

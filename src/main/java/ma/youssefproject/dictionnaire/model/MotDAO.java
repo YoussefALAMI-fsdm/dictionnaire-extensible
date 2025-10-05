@@ -11,7 +11,7 @@ public class MotDAO implements DAO {
 
     private static Connection connexion ;
 
-    MotDAO () { // Etablir la connexion et creation des tables , index IF NOT EXISTS
+   public MotDAO () { // Etablir la connexion et creation des tables , index IF NOT EXISTS
         this.connexion = DataBase.getConnexion() ;
 
         if ( this.connexion == null ) {
@@ -96,4 +96,3 @@ public class MotDAO implements DAO {
         }
     }
 }
-
