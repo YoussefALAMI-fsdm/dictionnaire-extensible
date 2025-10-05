@@ -58,11 +58,13 @@ public class DataBase {
 
         String sql1 = "CREATE TABLE IF NOT EXISTS mots (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT ," +
-                " mot TEXT NOT NULL ," +
-                " def TEXT" +
+                "mot TEXT NOT NULL ," +
+                "def TEXT" +
+                "categorie TEXT" +
                 ");" ;
 
-        String sql2 = " CREATE INDEX IF NOT EXISTS idx_mot ON mots(mot) ;" ;
+        String sql2 = "CREATE INDEX IF NOT EXISTS idx_mot ON mots(mot) ;" ;
+        String sql3 =  "CREATE INDEX IF NOT EXISTS idx_id ON mots(id)" ;
 
         if ( connexion == null ) { // Verification pour eviter le NPE
 
@@ -74,6 +76,7 @@ public class DataBase {
 
         stmt.execute(sql1) ;
         stmt.execute(sql2) ;
+        stmt.execute(sql3) ;
 
     } catch ( SQLException e ) {
         System.err.println(e.getMessage());

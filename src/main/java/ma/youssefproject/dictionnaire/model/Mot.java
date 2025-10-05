@@ -1,39 +1,49 @@
 package ma.youssefproject.dictionnaire.model;
 
-public class Mot { // C'est une class de type Entité qui defini les different objet en mémoire ,a fin de les manipuler via controlleur ou DAO ( acces au DB )
+public class Mot {
+    // Classe entité représentant un mot dans le dictionnaire
 
-    private StringBuilder mot ;
-    private StringBuilder def ;
-    private String categorie ;
-    private int id ;
+    private int id;
+    private String mot;
+    private String def;
+    private String categorie;
 
-
-    Mot( StringBuilder mot , StringBuilder def ) {
-        this.mot = mot ;
-        this.def = def ;
+    // Constructeur public
+    public Mot(int id, String mot, String def, String categorie) {
+        this.id = id;
+        this.mot = mot;
+        this.def = def;
+        this.categorie = categorie;
     }
 
-    public String getMot () {
-        return mot.toString() ;
+    // Getters
+    public int getId() {
+        return id;
     }
 
-    public String getDef () {
-        return def.toString() ;
+    public String getMot() {
+        return mot;
+    }
+
+    public String getDef() {
+        return def;
     }
 
     public String getCategorie() {
         return categorie;
     }
 
-    public void setMot(StringBuilder mot) {
+    // Setters
+    public void setMot(String mot) {
         this.mot = mot;
     }
 
-    public void setDef(StringBuilder def) {
+    public void setDef(String def) {
         this.def = def;
     }
 
     public void setCategorie(String categorie) {
         this.categorie = categorie;
     }
+
 }
