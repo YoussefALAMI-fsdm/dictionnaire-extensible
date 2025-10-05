@@ -32,7 +32,7 @@ public class DataBase {
         return appDir.toString() ;
     }
 
-    private static Connection getConnexion () {
+    public static Connection getConnexion () {
 
         File f = new File(emplacementDB) ;
 
@@ -54,7 +54,7 @@ public class DataBase {
         return connexion ;
     }
 
-    private static void creerDB () { // Appeler pour creer les tables si non ecore existant
+    public static boolean creerDB () { // Appeler pour creer les tables si non ecore existant ( ⚠️ ne doit pas etre appelé que apres faire du connexion )
 
         String sql1 = "CREATE TABLE IF NOT EXISTS mots (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT ," +
@@ -64,12 +64,10 @@ public class DataBase {
 
         String sql2 = " CREATE INDEX IF NOT EXISTS idx_mot ON mots(mot) ;" ;
 
-        connexion = getConnexion() ;
-
         if ( connexion == null ) { // Verification pour eviter le NPE
 
             System.err.println("Probleme lors su connexion au DB !! , creation annulée ! ");
-            return ;
+            return false ;
         }
 
     try ( Statement stmt = connexion.createStatement() ) {
@@ -79,14 +77,12 @@ public class DataBase {
 
     } catch ( SQLException e ) {
         System.err.println(e.getMessage());
+        return false ;
     }
-    }
-
-    public void init () {
-        creerDB();
+    return true ;
     }
 
-    public void close () {
+    public static void close () {
 
         if ( connexion != null ) {
 
