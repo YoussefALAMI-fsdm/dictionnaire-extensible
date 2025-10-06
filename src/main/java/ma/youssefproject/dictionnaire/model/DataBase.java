@@ -8,37 +8,51 @@ import java.sql.Statement;
 
 public class DataBase {
 
-    private static Connection connexion = null;
+    private static Connection connexion = null ;    // Debut null avant ce connecté
 
-    // Détection automatique du chemin de la DB selon l'OS
+                                                               // Détection automatique du chemin de la DB selon l'OS
     private static final String emplacementDB = detectDBPath();
 
     private static String detectDBPath() {
-        String os = System.getProperty("os.name").toLowerCase();
+
+        String os = System.getProperty("os.name").toLowerCase();   // Recuperer le OS et Nom du User
         String home = System.getProperty("user.home");
 
         // Chemin Docker uniquement si Linux et dossier existe
         File dockerDir = new File("/app/data");
-        if (os.contains("nix") || os.contains("nux") || os.contains("aix")) { // Linux/Unix
-            if (dockerDir.exists()) {
-                return dockerDir.getAbsolutePath();
-            }
+
+
+
+                                                           // @ On verifie que l'application tourne dans Docker
+
+        if (os.contains("nix") || os.contains("nux") || os.contains("aix")) { // Si le système est Linux/Unix/AIX (os contient "nix", "nux" ou "aix")
+
+            if (dockerDir.exists()) // ET que le dossier Docker "/app/data" existe,
+                return dockerDir.getAbsolutePath(); // et on utilise ce chemin pour la base de données. ( /app/data )
+
         }
 
-        // Sinon chemin local selon OS
+                                                        // @ Sinon chemin local selon OS
+
         StringBuilder localPath = new StringBuilder(home);
+
         if (os.contains("win")) {
             localPath.append(File.separator).append("AppData")
                     .append(File.separator).append("Local")
-                    .append(File.separator).append("Dictionnaire-extensible");
+                    .append(File.separator).append("Dictionnaire-extensible")
+                    .append(File.separator).append("database") ;
+
         } else if (os.contains("mac")) {
             localPath.append(File.separator).append("Library")
                     .append(File.separator).append("Application Support")
-                    .append(File.separator).append("Dictionnaire-extensible");
+                    .append(File.separator).append("Dictionnaire-extensible")
+                    .append(File.separator).append("database") ;
+
         } else {
             localPath.append(File.separator).append(".local")
                     .append(File.separator).append("share")
-                    .append(File.separator).append("Dictionnaire-extensible");
+                    .append(File.separator).append("Dictionnaire-extensible")
+                    .append(File.separator).append("database") ;
         }
 
         return localPath.toString();
