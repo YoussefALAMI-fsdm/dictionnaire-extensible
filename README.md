@@ -1,5 +1,5 @@
 # Cloner le projet
-git clone https://github.com/ton-compte/mon-projet-dictionnaire.git
+git clone https://github.com/YoussefALAMI-fsdm/dictionnaire-extensible <br><br>
 cd mon-projet-dictionnaire
 
 # Builder l'image Docker
