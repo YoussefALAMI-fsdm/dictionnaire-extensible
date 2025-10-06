@@ -33,7 +33,7 @@ public class InterfaceCLI {
                 System.out.println("\n\t 2) Fermer le programme");
                 System.out.print("\n\n\t\t\t\t Taper votre choix : ");
                 choix = sc.nextInt();
-
+                sc.nextLine(); // <-- Vide le retour à la ligne restant
                 if (choix == 1) {
 
                     System.out.print("\n\n\t Donner le mot a chercher : ");

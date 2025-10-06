@@ -20,13 +20,13 @@ public class DataBase {
          StringBuilder appDir = new StringBuilder(home) ;
 
         if ( os.contains("win") )  // C:\Users\<nom>\AppData\Local\Dictionnaire-extensible
-            appDir.append(File.separator).append("AppData").append(File.separator).append("Local").append("Dictionnaire-extensible") ;
+            appDir.append(File.separator).append("AppData").append(File.separator).append("Local").append(File.separator).append("Dictionnaire-extensible") ;
 
           else if ( os.contains("mac") ) // /Users/<nom>/Library/Application Support/Dictionnaire-extensible
-            appDir.append(File.separator).append("Library").append(File.separator).append("Application Support").append("Dictionnaire-extensible") ;
+            appDir.append(File.separator).append("Library").append(File.separator).append("Application Support").append(File.separator).append("Dictionnaire-extensible") ;
 
             else // /home/<nom>/.local/share/Dictionnaire-extensible
-            appDir.append(File.separator).append(".local").append(File.separator).append("share").append("Dictionnaire-extensible") ;
+            appDir.append(File.separator).append(".local").append(File.separator).append("share").append(File.separator).append("Dictionnaire-extensible") ;
 
 
         return appDir.toString() ;
@@ -59,7 +59,7 @@ public class DataBase {
         String sql1 = "CREATE TABLE IF NOT EXISTS mots (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT ," +
                 "mot TEXT NOT NULL ," +
-                "def TEXT" +
+                "def TEXT ," +
                 "categorie TEXT" +
                 ");" ;
 
