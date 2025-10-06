@@ -12,9 +12,9 @@ public class InterfaceCLI {
 
     public void ajoutDef ( String mot ) {
 
-        System.out.println("Veuillez donnée la definition du mot : "+mot);
+        System.out.print("Veuillez donnée la definition du mot \""+mot+"\" : ");
         String def = sc.nextLine() ;
-        System.out.println("Veuillez donnée la catégorie du mot : "+mot);
+        System.out.print("Veuillez donnée la catégorie du mot \""+mot+"\" : ");
         String cat = sc.nextLine() ;
 
         System.out.println("\n\t\t"+DictionnaireController.ajouterDef(mot,def,cat)) ;
@@ -44,13 +44,13 @@ public class InterfaceCLI {
                         System.out.print("\n\n\t\t Le mot n'est pas trouvé , voullez ajouter une def (yes/no) ? ");
                         String reponse = sc.nextLine() ;
 
-                        if ( reponse.equalsIgnoreCase("yes") || reponse.equalsIgnoreCase("no"))
+                        if ( reponse.equalsIgnoreCase("yes") || reponse.equalsIgnoreCase("y"))
                             ajoutDef(mot);
                     }
-                    else
+                    else {
                         afficherDef(m);
+                    }
                 }
-
             } while (choix != 2);
         }
     }
