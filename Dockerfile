@@ -1,5 +1,5 @@
 # ===== Étape 1 : Build Maven =====
-FROM maven:3.9.3-openjdk-24 AS build
+FROM maven:3.9.3-openjdk-17 AS build
 
 # Définir le répertoire de travail
 WORKDIR /app
@@ -17,9 +17,9 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # ===== Étape 2 : Création de l'image finale =====
-FROM openjdk:24-jdk-slim
+FROM openjdk:17-jdk-slim
 
-# Créer le répertoire de travail
+# Définir le répertoire de travail
 WORKDIR /app
 
 # Copier le JAR généré depuis l'étape build
