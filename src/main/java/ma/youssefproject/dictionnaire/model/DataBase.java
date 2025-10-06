@@ -8,50 +8,47 @@ import java.sql.Statement;
 
 public class DataBase {
 
-    // Détection automatique de Docker : si le conteneur contient /app/data, on utilise ce chemin
-    private static final String DOCKER_PATH = "/app/data";
-    private static final String LOCAL_PATH = getLocalDataPath();
-
-    public static final String emplacementDB = isDocker() ? DOCKER_PATH : LOCAL_PATH;
     private static Connection connexion = null;
 
-    // Méthode pour détecter si l'application tourne dans Docker
-    private static boolean isDocker() {
-        File dockerDir = new File(DOCKER_PATH);
-        return dockerDir.exists() || dockerDir.mkdirs();
-    }
+    // Détection automatique du chemin de la DB selon l'OS
+    private static final String emplacementDB = detectDBPath();
 
-    // Retourne le chemin de données local selon le système
-    private static String getLocalDataPath() {
-        String home = System.getProperty("user.home");
+    private static String detectDBPath() {
         String os = System.getProperty("os.name").toLowerCase();
+        String home = System.getProperty("user.home");
 
-        StringBuilder appDir = new StringBuilder(home);
+        // Chemin Docker uniquement si Linux et dossier existe
+        File dockerDir = new File("/app/data");
+        if (os.contains("nix") || os.contains("nux") || os.contains("aix")) { // Linux/Unix
+            if (dockerDir.exists()) {
+                return dockerDir.getAbsolutePath();
+            }
+        }
 
-        if (os.contains("win"))
-            appDir.append(File.separator).append("AppData")
+        // Sinon chemin local selon OS
+        StringBuilder localPath = new StringBuilder(home);
+        if (os.contains("win")) {
+            localPath.append(File.separator).append("AppData")
                     .append(File.separator).append("Local")
                     .append(File.separator).append("Dictionnaire-extensible");
-        else if (os.contains("mac"))
-            appDir.append(File.separator).append("Library")
+        } else if (os.contains("mac")) {
+            localPath.append(File.separator).append("Library")
                     .append(File.separator).append("Application Support")
                     .append(File.separator).append("Dictionnaire-extensible");
-        else
-            appDir.append(File.separator).append(".local")
+        } else {
+            localPath.append(File.separator).append(".local")
                     .append(File.separator).append("share")
                     .append(File.separator).append("Dictionnaire-extensible");
+        }
 
-        return appDir.toString();
+        return localPath.toString();
     }
 
     public static Connection getConnexion() {
         File f = new File(emplacementDB);
-
-        if (!f.exists()) {
-            if (!f.mkdirs()) {
-                System.err.println("Impossible de créer le dossier pour la DB !");
-                return null;
-            }
+        if (!f.exists() && !f.mkdirs()) {
+            System.err.println("Impossible de créer le dossier pour la DB !");
+            return null;
         }
 
         if (connexion == null) {
@@ -62,6 +59,8 @@ public class DataBase {
                 System.err.println("Problème de connexion avec la DB !!! : " + e.getMessage());
             }
         }
+
+        System.out.println("DB sera créée ici : " + emplacementDB + File.separator + "dictionnaire.db");
         return connexion;
     }
 
