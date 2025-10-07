@@ -17,8 +17,5 @@ WORKDIR /app
 # Copier le JAR avec dépendances depuis l'étape build
 COPY --from=build /app/target/dictionnaire-1.0-SNAPSHOT-jar-with-dependencies.jar app.jar
 
-# Créer le dossier pour SQLite
-RUN mkdir -p /root/.local/share/Dictionnaire-extensible/database/
-
 # Commande pour lancer l'application
 CMD ["java", "-jar", "app.jar"]
