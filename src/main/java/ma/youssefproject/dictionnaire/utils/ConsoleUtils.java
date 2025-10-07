@@ -27,12 +27,4 @@ public class ConsoleUtils {
             // Si la commande échoue (IDE ou terminal non standard), ne rien faire
         }
     }
-
-    // Test rapide
-    public static void main(String[] args) {
-        System.out.println("Avant clear...");
-        try { Thread.sleep(1000); } catch (InterruptedException ignored) {}
-        clearScreen();
-        System.out.println("Après clear !");
-    }
 }
