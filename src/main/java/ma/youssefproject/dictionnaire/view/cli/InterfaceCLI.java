@@ -15,7 +15,7 @@ public class InterfaceCLI {
        ConsoleUtils.clearScreen();
         System.out.print("\n\t Veuillez donnée la definition du mot \""+mot+"\" : ");
         String def = sc.nextLine() ;
-        System.out.print("\n\t Veuillez donnée la catégorie du mot \""+mot+"\" : ");
+        System.out.println("\n\t Veuillez donnée la catégorie du mot \""+mot+"\" : ");
         String cat = sc.nextLine() ;
 
         System.out.println("\n\t\t"+DictionnaireController.ajouterDef(mot,def,cat)) ;
@@ -29,6 +29,7 @@ public class InterfaceCLI {
         public void menuDemmarage () {
             int choix;
             do {
+                ConsoleUtils.clearScreen();
                 System.out.println("\n\n\t\t  ---------------- Bonjour dans votre dictionnaire CLI -------------------- ");
                 System.out.println("\n\n\t 1) Chercher une definition");
                 System.out.println("\n\t 2) Fermer le programme");
@@ -51,9 +52,9 @@ public class InterfaceCLI {
                     else {
                         afficherDef(m);
                     }
-                    System.out.println("\n\t\t Voulez vous revenir au menu principale (y/n) ? ");
+                    System.out.print("\n\t\t Voulez vous revenir au menu principale (y/n) ? : ");
                     String reponse = sc.nextLine() ;
-
+                    ConsoleUtils.clearScreen();
                     if ( reponse.equalsIgnoreCase("yes") || reponse.equalsIgnoreCase("y"))
                         continue;
                     else
