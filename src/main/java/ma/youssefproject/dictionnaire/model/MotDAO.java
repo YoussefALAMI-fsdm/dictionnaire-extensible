@@ -57,11 +57,14 @@ public class MotDAO implements DAO {
     }
 
     @Override
-    public boolean changeDef(int id, String nouvelleDef) {
-        String sql = "UPDATE mots SET def = ? WHERE id = ?";
+    public boolean changeDef( Mot nouveau ) {
+        String sql = "UPDATE mots SET mot = ?, def = ? , categorie = ?  WHERE id = ?";
+
         try (PreparedStatement stmt = connexion.prepareStatement(sql)) {
-            stmt.setString(1, nouvelleDef);
-            stmt.setInt(2, id);
+            stmt.setString(1,nouveau.getMot());
+            stmt.setString(2,nouveau.getDef());
+            stmt.setString(3,nouveau.getCategorie());
+            stmt.setInt(4,nouveau.getId());
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {

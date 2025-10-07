@@ -31,8 +31,16 @@ public class DictionnaireController {
     }
 
     // Modifier une définition
-    public String modifierDef(int id, String nouvelleDef) {
-        if (dao.changeDef(id, nouvelleDef)) {
+    public String modifierDef(Mot ancien, String nom, String def, String categorie) {
+
+        // Si champ vide, on garde l'ancienne valeur
+        String nouveauMot = nom.isEmpty() ? ancien.getMot() : nom;
+        String nouvelleDef = def.isEmpty() ? ancien.getDef() : def;
+        String nouvelleCategorie = categorie.isEmpty() ? ancien.getCategorie() : categorie;
+
+        Mot nouveau = new Mot(ancien.getId(), nouveauMot, nouvelleDef, nouvelleCategorie);
+
+        if (dao.changeDef(nouveau)) {
             return "La définition a été modifiée avec succès !";
         } else {
             return "Problème lors de la modification de la définition";

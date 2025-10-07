@@ -27,8 +27,39 @@ public class InterfaceCLI {
         System.out.println("\n\t\t" + controller.ajouterDef(mot, def, cat));
     }
 
+    public void modifierDef(Mot mot) {
+        ConsoleUtils.clearScreen();
+
+        System.out.println("\n\t Ancien mot : "+mot.getMot());
+        System.out.println("\n\t Ancien definition : "+mot.getDef());
+        System.out.println("\n\t Ancien categorie : "+mot.getCategorie());
+
+        System.out.println("\n\n\t\t\t\t ---- ⚠ ️ Champ vide = inchangé ----");
+
+        System.out.print("\n\n\t Donner le nouveau mot (vide = inchangé) : ");
+        String nom = sc.nextLine();
+
+        System.out.print("\n\n\t Donner la nouvelle definition (vide = inchangé) : ");
+        String def = sc.nextLine();
+
+        System.out.print("\n\n\t Donner la nouvelle categorie (vide = inchangé) : ");
+        String cat = sc.nextLine();
+
+        // Appel au controller en passant uniquement les Strings et l'ancien Mot
+        System.out.println("\n\n\t\t"+controller.modifierDef(mot, nom, def, cat));
+    }
+
+
     public void afficherDef(Mot mot) {
-        System.out.println("\n\n\tLa définition du mot " + mot.getMot() + " est : " + mot.getDef());
+        System.out.println("\n\n\tLa définition du mot " + mot.getMot() +
+                " est : " + mot.getDef() +
+                "\t\t\t Categorie : "+mot.getCategorie());
+
+        System.out.print("\n\n\t Voullez vous modifier le mot, la definition ou la categorie  ? (y/n) : ");
+        String reponse = sc.nextLine() ;
+
+        if ( reponse.equalsIgnoreCase("yes") || reponse.equalsIgnoreCase("y") )
+            modifierDef(mot);
     }
 
     public void menuDemmarage() {
