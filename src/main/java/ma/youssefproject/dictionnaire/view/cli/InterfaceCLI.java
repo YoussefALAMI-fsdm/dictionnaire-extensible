@@ -37,7 +37,7 @@ public class InterfaceCLI {
             ConsoleUtils.clearScreen();
             System.out.println("\n\n\t\t---------------- Bonjour dans votre dictionnaire CLI -------------------- ");
             System.out.println("\n\t1) Chercher une définition");
-            System.out.println("\t2) Fermer le programme");
+            System.out.println("\n \t2) Fermer le programme");
             System.out.print("\n\t\tTaper votre choix : ");
             choix = sc.nextInt();
             sc.nextLine(); // Vide le retour à la ligne restant
