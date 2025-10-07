@@ -1,6 +1,6 @@
 # Cloner le projet
 ```bash
-git clone https://github.com/YoussefALAMI-fsdm/dictionnaire-extensible <br><br>
+git clone https://github.com/YoussefALAMI-fsdm/dictionnaire-extensible
 ```
 ```bash
 cd dictionnaire-extensible
