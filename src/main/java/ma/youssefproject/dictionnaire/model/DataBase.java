@@ -8,110 +8,104 @@ import java.sql.Statement;
 
 public class DataBase {
 
-    private static Connection connexion = null ;    // Debut null avant ce connecté
+    private final Connection connexion; // Suggestion 1 : connexion non statique
+    private final String dbPath;
 
-                                                               // Détection automatique du chemin de la DB selon l'OS
-    private static final String emplacementDB = detectDBPath();
+    public DataBase() throws RuntimeException {
+        this.dbPath = detectDBPath(); // Suggestion 4 : factorisation détection chemin
 
-    private static String detectDBPath() {
-
-        String os = System.getProperty("os.name").toLowerCase();   // Recuperer le OS et Nom du User
-        String home = System.getProperty("user.home");
-
-        // Chemin Docker uniquement si Linux et dossier existe
-        File dockerDir = new File("/app/data");
-
-
-
-                                                           // @ On verifie que l'application tourne dans Docker
-
-        if (os.contains("nix") || os.contains("nux") || os.contains("aix")) { // Si le système est Linux/Unix/AIX (os contient "nix", "nux" ou "aix")
-
-            if (dockerDir.exists()) // ET que le dossier Docker "/app/data" existe,
-                return dockerDir.getAbsolutePath(); // et on utilise ce chemin pour la base de données. ( /app/data )
-
+        File f = new File(dbPath);
+        if (!f.exists() && !f.mkdirs()) { // Suggestion 3 : gestion exception
+            throw new RuntimeException("Impossible de créer le dossier pour la DB !");
         }
 
-                                                        // @ Sinon chemin local selon OS
+        try {
+            String url = "jdbc:sqlite:" + dbPath + File.separator + "dictionnaire.db";
+            this.connexion = DriverManager.getConnection(url);
+        } catch (SQLException e) {
+            throw new RuntimeException("Problème de connexion à la DB : " + e.getMessage(), e);
+        }
 
+        // Création des tables et index
+        if (!creerDB()) {
+            throw new RuntimeException("Impossible de créer les tables et index de la DB !");
+        }
+    }
+
+    /**
+     * Détecte le chemin de la base de données selon le système d'exploitation et si l'application tourne dans Docker
+     */
+    private static String detectDBPath() {
+        String os = System.getProperty("os.name").toLowerCase();
+        String home = System.getProperty("user.home");
+
+        // Vérification Docker Linux/Unix
+        File dockerDir = new File("/app/data");
+        if ((os.contains("nix") || os.contains("nux") || os.contains("aix")) && dockerDir.exists()) {
+            return dockerDir.getAbsolutePath();
+        }
+
+        // Chemins locaux selon OS
         StringBuilder localPath = new StringBuilder(home);
-
         if (os.contains("win")) {
             localPath.append(File.separator).append("AppData")
                     .append(File.separator).append("Local")
                     .append(File.separator).append("Dictionnaire-extensible")
-                    .append(File.separator).append("database") ;
-
+                    .append(File.separator).append("database");
         } else if (os.contains("mac")) {
             localPath.append(File.separator).append("Library")
                     .append(File.separator).append("Application Support")
                     .append(File.separator).append("Dictionnaire-extensible")
-                    .append(File.separator).append("database") ;
-
+                    .append(File.separator).append("database");
         } else {
             localPath.append(File.separator).append(".local")
                     .append(File.separator).append("share")
                     .append(File.separator).append("Dictionnaire-extensible")
-                    .append(File.separator).append("database") ;
+                    .append(File.separator).append("database");
         }
-
         return localPath.toString();
     }
 
-    public static Connection getConnexion() {
-        File f = new File(emplacementDB);
-        if (!f.exists() && !f.mkdirs()) {
-            System.err.println("Impossible de créer le dossier pour la DB !");
-            return null;
-        }
-
-        if (connexion == null) {
-            try {
-                String url = "jdbc:sqlite:" + emplacementDB + File.separator + "dictionnaire.db";
-                connexion = DriverManager.getConnection(url);
-            } catch (SQLException e) {
-                System.err.println("Problème de connexion avec la DB !!! : " + e.getMessage());
-            }
-        }
-
-        System.out.println("DB sera créée ici : " + emplacementDB + File.separator + "dictionnaire.db");
+    /**
+     * Retourne la connexion active
+     */
+    public Connection getConnexion() {
         return connexion;
     }
 
-    public static boolean creerDB() {
-        String sql1 = "CREATE TABLE IF NOT EXISTS mots (" +
+    /**
+     * Création des tables et index si non existants
+     */
+    public boolean creerDB() {
+        String sqlTable = "CREATE TABLE IF NOT EXISTS mots (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "mot TEXT NOT NULL, " +
                 "def TEXT, " +
-                "categorie TEXT" +
-                ");";
-        String sql2 = "CREATE INDEX IF NOT EXISTS idx_mot ON mots(mot);";
-        String sql3 = "CREATE INDEX IF NOT EXISTS idx_id ON mots(id);";
-
-        if (connexion == null) {
-            System.err.println("Problème lors de la connexion au DB ! Création annulée !");
-            return false;
-        }
+                "categorie TEXT);";
+        String sqlIndexMot = "CREATE INDEX IF NOT EXISTS idx_mot ON mots(mot);";
+        String sqlIndexId = "CREATE INDEX IF NOT EXISTS idx_id ON mots(id);";
 
         try (Statement stmt = connexion.createStatement()) {
-            stmt.execute(sql1);
-            stmt.execute(sql2);
-            stmt.execute(sql3);
+            stmt.execute(sqlTable);
+            stmt.execute(sqlIndexMot);
+            stmt.execute(sqlIndexId);
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            System.err.println("Erreur création tables/index : " + e.getMessage());
             return false;
         }
         return true;
     }
 
-    public static void close() {
-        if (connexion != null) {
-            try {
+    /**
+     * Ferme la connexion
+     */
+    public void close() {
+        try {
+            if (connexion != null && !connexion.isClosed()) {
                 connexion.close();
-                connexion = null;
-            } catch (SQLException e) {
-                System.err.println("Erreur fermeture DB : " + e.getMessage());
             }
+        } catch (SQLException e) {
+            System.err.println("Erreur fermeture DB : " + e.getMessage());
         }
     }
 }

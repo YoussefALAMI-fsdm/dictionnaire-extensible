@@ -7,32 +7,35 @@ import java.util.List;
 
 public class DictionnaireController {
 
+    private final MotDAO dao;  // instance de DAO
 
-    private static MotDAO dao = new MotDAO() ;
-
-    public static Mot rechercherDef (String motchercher ) {
-
-        Mot mot = new Mot (-1,motchercher,null,null) ;
-
-       return dao.getDef(mot) ;
-
+    // Constructeur : injection du DAO pour plus de flexibilité et testabilité
+    public DictionnaireController(MotDAO dao) {
+        this.dao = dao;
     }
 
-    public static String ajouterDef (String motAjouter , String def , String categorie ) {
-
-        Mot mot = new Mot (-1,motAjouter,def,categorie) ;
-
-        if (dao.addDef(mot))
-            return "Le mot est ajouter avec success !" ;
-        else
-            return "Probleme d'ajout du mot dans le dictionnaire" ;
+    // Recherche d'une définition
+    public Mot rechercherDef(String motChercher) {
+        Mot mot = new Mot(-1, motChercher, null, null);
+        return dao.getDef(mot);
     }
 
-    public static String modifierDef ( int id , String nouvelDef ) {
+    // Ajouter une définition
+    public String ajouterDef(String motAjouter, String def, String categorie) {
+        Mot mot = new Mot(-1, motAjouter, def, categorie);
+        if (dao.addDef(mot)) {
+            return "Le mot a été ajouté avec succès !";
+        } else {
+            return "Problème d'ajout du mot dans le dictionnaire";
+        }
+    }
 
-       if ( dao.changeDef(id,nouvelDef) )
-           return "Definition est modifié avec success !" ;
-       else
-           return "Probleme lors de modification du definition" ;
+    // Modifier une définition
+    public String modifierDef(int id, String nouvelleDef) {
+        if (dao.changeDef(id, nouvelleDef)) {
+            return "La définition a été modifiée avec succès !";
+        } else {
+            return "Problème lors de la modification de la définition";
+        }
     }
 }
