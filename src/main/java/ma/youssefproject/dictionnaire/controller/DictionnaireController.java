@@ -3,6 +3,7 @@ package ma.youssefproject.dictionnaire.controller;
 import ma.youssefproject.dictionnaire.model.Mot;
 import ma.youssefproject.dictionnaire.model.MotDAO;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class DictionnaireController {
@@ -40,10 +41,15 @@ public class DictionnaireController {
 
         Mot nouveau = new Mot(ancien.getId(), nouveauMot, nouvelleDef, nouvelleCategorie);
 
-        if (dao.changeDef(nouveau)) {
-            return "La définition a été modifiée avec succès !";
-        } else {
-            return "Problème lors de la modification de la définition";
+
+        try {
+         if (dao.changeDef(nouveau)) // true
+             return "le Mot \""+nouveau.getMot()+"\" est modifier avec success !" ;
+         else
+             return "le Mot \""+nouveau.getMot()+"\" deja existe ! " ;
+        } catch (SQLException e) {
+            return ("Probleme SQL : " + e.getMessage()); // @ A supprimer le getMessage () et le remplacer par logger
         }
-    }
+        }
+
 }

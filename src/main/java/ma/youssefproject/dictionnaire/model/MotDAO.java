@@ -56,8 +56,15 @@ public class MotDAO implements DAO {
         return def;
     }
 
+                                                       // # throws SQLExeption
+              // signifie que cette methode leve SQLExeption , a gerer par le controller ( la class qui appel cette methode )
     @Override
-    public boolean changeDef( Mot nouveau ) {
+    public boolean changeDef ( Mot nouveau ) throws SQLException {     // ( SUCCESS = true , EXISTS = false )
+
+        if ( getDef(nouveau) != null ) { // C a d le mot deja existe ( UNIQUE INDEX )
+            return false ;
+        }
+
         String sql = "UPDATE mots SET mot = ?, def = ? , categorie = ?  WHERE id = ?";
 
         try (PreparedStatement stmt = connexion.prepareStatement(sql)) {
@@ -66,10 +73,7 @@ public class MotDAO implements DAO {
             stmt.setString(3,nouveau.getCategorie());
             stmt.setInt(4,nouveau.getId());
             stmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            System.err.println("Erreur modification définition : " + e.getMessage());
-            return false;
+            return true ;
         }
     }
 }
