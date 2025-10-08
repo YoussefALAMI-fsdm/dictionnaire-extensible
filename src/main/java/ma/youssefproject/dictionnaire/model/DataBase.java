@@ -63,7 +63,6 @@ public class DataBase {
         if ((os.contains("nix") || os.contains("nux") || os.contains("aix"))
                 && !new File(localPath.toString()).exists()
                 && dockerDir.exists()) {
-            System.out.println("Docker détecté : utilisation temporaire de /app/data pour la DB");
             return dockerDir.getAbsolutePath();
         }
 
