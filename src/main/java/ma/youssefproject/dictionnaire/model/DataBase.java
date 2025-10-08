@@ -77,18 +77,17 @@ public class DataBase {
      * Création des tables et index si non existants
      */
     public boolean creerDB() {
-        String sqlTable = "CREATE TABLE IF NOT EXISTS mots (" +
+        String sqlTable = "CREATE TABLE IF NOT EXISTS mots (" + // index unique creer automatiquement par sql
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "mot TEXT NOT NULL, " +
                 "def TEXT, " +
                 "categorie TEXT);";
-        String sqlIndexMot = "CREATE INDEX IF NOT EXISTS idx_mot ON mots(mot);";
-        String sqlIndexId = "CREATE INDEX IF NOT EXISTS idx_id ON mots(id);";
+
+        String sqlIndexMot = "CREATE UNIQUE INDEX IF NOT EXISTS idx_mot ON mots(mot);"; // Unique car pas meme mot exacte avec deux def different
 
         try (Statement stmt = connexion.createStatement()) {
             stmt.execute(sqlTable);
             stmt.execute(sqlIndexMot);
-            stmt.execute(sqlIndexId);
         } catch (SQLException e) {
             System.err.println("Erreur création tables/index : " + e.getMessage());
             return false;
