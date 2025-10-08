@@ -8,15 +8,15 @@ import java.sql.Statement;
 
 public class DataBase {
 
-    private final Connection connexion; // Suggestion 1 : connexion non statique
+    private final Connection connexion;
     private final String dbPath;
 
     public DataBase() throws RuntimeException {
-        this.dbPath = detectDBPath(); // Suggestion 4 : factorisation détection chemin
+        this.dbPath = detectDBPath();
 
         File f = new File(dbPath);
-        if (!f.exists() && !f.mkdirs()) { // Suggestion 3 : gestion exception
-            throw new RuntimeException("Impossible de créer le dossier pour la DB !");
+        if (!f.exists() && !f.mkdirs()) {
+            throw new RuntimeException("Impossible de créer le dossier pour la DB ! (" + dbPath + ")");
         }
 
         try {
@@ -26,27 +26,21 @@ public class DataBase {
             throw new RuntimeException("Problème de connexion à la DB : " + e.getMessage(), e);
         }
 
-        // Création des tables et index
         if (!creerDB()) {
             throw new RuntimeException("Impossible de créer les tables et index de la DB !");
         }
     }
 
     /**
-     * Détecte le chemin de la base de données selon le système d'exploitation et si l'application tourne dans Docker
+     * Détecte le chemin de la base de données selon l'OS
+     * et gère le cas Docker si aucun volume n'est monté
      */
     private static String detectDBPath() {
         String os = System.getProperty("os.name").toLowerCase();
         String home = System.getProperty("user.home");
 
-        // Vérification Docker Linux/Unix
-        File dockerDir = new File("/app/data");
-        if ((os.contains("nix") || os.contains("nux") || os.contains("aix")) && dockerDir.exists()) {
-            return dockerDir.getAbsolutePath();
-        }
-
-        // Chemins locaux selon OS
         StringBuilder localPath = new StringBuilder(home);
+
         if (os.contains("win")) {
             localPath.append(File.separator).append("AppData")
                     .append(File.separator).append("Local")
@@ -57,12 +51,22 @@ public class DataBase {
                     .append(File.separator).append("Application Support")
                     .append(File.separator).append("Dictionnaire-extensible")
                     .append(File.separator).append("database");
-        } else {
+        } else { // Linux / Unix
             localPath.append(File.separator).append(".local")
                     .append(File.separator).append("share")
                     .append(File.separator).append("Dictionnaire-extensible")
                     .append(File.separator).append("database");
         }
+
+        // Vérification Docker Linux/Unix si aucune DB existante dans l'OS
+        File dockerDir = new File("/app/data");
+        if ((os.contains("nix") || os.contains("nux") || os.contains("aix"))
+                && !new File(localPath.toString()).exists()
+                && dockerDir.exists()) {
+            System.out.println("Docker détecté : utilisation temporaire de /app/data pour la DB");
+            return dockerDir.getAbsolutePath();
+        }
+
         return localPath.toString();
     }
 
@@ -77,13 +81,13 @@ public class DataBase {
      * Création des tables et index si non existants
      */
     public boolean creerDB() {
-        String sqlTable = "CREATE TABLE IF NOT EXISTS mots (" + // index unique creer automatiquement par sql
+        String sqlTable = "CREATE TABLE IF NOT EXISTS mots (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "mot TEXT NOT NULL, " +
                 "def TEXT, " +
                 "categorie TEXT);";
 
-        String sqlIndexMot = "CREATE UNIQUE INDEX IF NOT EXISTS idx_mot ON mots(mot);"; // Unique car pas meme mot exacte avec deux def different
+        String sqlIndexMot = "CREATE UNIQUE INDEX IF NOT EXISTS idx_mot ON mots(mot);";
 
         try (Statement stmt = connexion.createStatement()) {
             stmt.execute(sqlTable);
