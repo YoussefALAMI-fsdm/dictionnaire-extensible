@@ -8,5 +8,6 @@ public interface DAO {
     boolean addDef ( Mot mot ) ;
     Mot getDef (Mot mot ) ;
     public boolean changeDef ( Mot nouveau ) throws SQLException ;
+    public List<Mot> searchByCategorie ( String Categorie ) ;
 
 }

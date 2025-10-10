@@ -52,4 +52,10 @@ public class DictionnaireController {
         }
         }
 
+        public List<Mot> rechercheParCategorie ( String Categorie )  {
+
+        return dao.searchByCategorie(Categorie) ;
+
+    }
+
 }

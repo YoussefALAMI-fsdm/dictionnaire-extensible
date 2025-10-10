@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MotDAO implements DAO {
 
@@ -23,7 +25,8 @@ public class MotDAO implements DAO {
     @Override
     public boolean addDef(Mot mot) {
         String sql = "INSERT INTO mots(mot, def, categorie) VALUES (?, ?, ?)";
-        try (PreparedStatement stmt = connexion.prepareStatement(sql)) {
+
+        try ( PreparedStatement stmt = connexion.prepareStatement(sql) ) {
             stmt.setString(1, mot.getMot());
             stmt.setString(2, mot.getDef());
             stmt.setString(3, mot.getCategorie());
@@ -74,6 +77,37 @@ public class MotDAO implements DAO {
             stmt.setInt(4,nouveau.getId());
             stmt.executeUpdate();
             return true ;
+        }
+    }
+
+    public List<Mot> searchByCategorie ( String Categorie ) {
+
+        String sql = "SELECT * FROM mots WHERE ? = Categorie; " ;
+
+        List<Mot> mots = new LinkedList<>() ;
+
+        try ( PreparedStatement stmt = connexion.prepareStatement(sql)) {
+
+            stmt.setString(1,Categorie);
+
+            ResultSet rs = stmt.executeQuery() ;
+
+            while ( rs.next() ) {
+
+                Mot m = new Mot (
+                        rs.getInt("id") ,
+                        rs.getString("mot") ,
+                        rs.getString("def") ,
+                        null
+                );
+
+                mots.add(m) ;
+            }
+
+            return mots ;
+        } catch ( SQLException e ) {
+            System.err.println(" Probleme dans searchByCategorie : "+e.getMessage());
+            return mots ;
         }
     }
 }

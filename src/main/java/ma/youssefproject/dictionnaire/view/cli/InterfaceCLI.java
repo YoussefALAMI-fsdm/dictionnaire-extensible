@@ -4,6 +4,7 @@ import ma.youssefproject.dictionnaire.controller.DictionnaireController;
 import ma.youssefproject.dictionnaire.model.Mot;
 import ma.youssefproject.dictionnaire.utils.ConsoleUtils;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class InterfaceCLI {
@@ -62,18 +63,35 @@ public class InterfaceCLI {
             modifierDef(mot);
     }
 
+    public void afficherList ( String categorie ) {
+
+        List<Mot> mots = controller.rechercheParCategorie(categorie) ;
+
+        if ( mots.isEmpty() )
+            System.out.println("\n\n\t Aucun mot n'est trouvé dans cette catégorie ! ");
+        else {
+            for ( Mot m : mots) {
+                System.out.println("\n\n\t\t ------------------------------------------------------------");
+                System.out.println("\n\t Mot : " + m.getMot());
+                System.out.println("\n\t Definition : " + m.getDef());
+            }
+            System.out.println("\n\n\t\t ------------------------------------------------------------");
+        }
+    }
+
     public void menuDemmarage() {
         int choix;
         do {
             ConsoleUtils.clearScreen();
             System.out.println("\n\n\t\t---------------- Bonjour dans votre dictionnaire CLI -------------------- ");
-            System.out.println("\n\t1) Chercher une définition");
-            System.out.println("\n \t2) Fermer le programme");
-            System.out.print("\n\t\tTaper votre choix : ");
+            System.out.println("\n\t 1) Chercher une définition ");
+            System.out.println("\n \t 2) Chercher par categorie ");
+            System.out.println("\n \t 3) Fermer le programme ");
+            System.out.print("\n\t\t Taper votre choix : ");
             choix = sc.nextInt();
             sc.nextLine(); // Vide le retour à la ligne restant
 
-            if (choix == 1) {
+            if ( choix == 1 ) {
                 ConsoleUtils.clearScreen();
                 System.out.print("\n\tDonner le mot à chercher : ");
                 String mot = sc.nextLine();
@@ -102,6 +120,15 @@ public class InterfaceCLI {
                 }
             }
 
-        } while (choix != 2);
+            else if ( choix == 2 ) {
+                ConsoleUtils.clearScreen();
+                System.out.print("\n\tDonner la categorie à chercher : ");
+                String categorie = sc.nextLine();
+                ConsoleUtils.clearScreen();
+                afficherList(categorie);
+
+            }
+
+        } while ( choix != 3 ) ;
     }
 }
