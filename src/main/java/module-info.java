@@ -16,4 +16,5 @@ module ma.youssefproject.dictionnaire {
     // Exports uniquement ce qui doit être accessible depuis d'autres modules (optionnel)
     exports ma.youssefproject.dictionnaire.App;
     exports ma.youssefproject.dictionnaire.model;
+    exports ma.youssefproject.dictionnaire.DAO;
 }

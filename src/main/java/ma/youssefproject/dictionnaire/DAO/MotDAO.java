@@ -1,4 +1,6 @@
-package ma.youssefproject.dictionnaire.model;
+package ma.youssefproject.dictionnaire.DAO;
+
+import ma.youssefproject.dictionnaire.model.Mot;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

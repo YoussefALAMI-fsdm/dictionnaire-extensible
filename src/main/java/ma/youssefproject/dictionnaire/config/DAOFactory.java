@@ -1,7 +1,7 @@
 package ma.youssefproject.dictionnaire.config;
 
-import ma.youssefproject.dictionnaire.model.DataBase;
-import ma.youssefproject.dictionnaire.model.MotDAO;
+import ma.youssefproject.dictionnaire.DAO.DataBase;
+import ma.youssefproject.dictionnaire.DAO.MotDAO;
 
 import java.sql.Connection;
 

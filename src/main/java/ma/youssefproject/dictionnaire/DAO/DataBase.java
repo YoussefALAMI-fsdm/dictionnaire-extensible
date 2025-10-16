@@ -1,4 +1,4 @@
-package ma.youssefproject.dictionnaire.model;
+package ma.youssefproject.dictionnaire.DAO;
 
 import java.io.File;
 import java.sql.Connection;

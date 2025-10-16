@@ -1,7 +1,7 @@
 package ma.youssefproject.dictionnaire.controller;
 
 import ma.youssefproject.dictionnaire.model.Mot;
-import ma.youssefproject.dictionnaire.model.MotDAO;
+import ma.youssefproject.dictionnaire.DAO.MotDAO;
 
 import java.sql.SQLException;
 import java.util.List;
